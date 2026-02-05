@@ -6,7 +6,10 @@
   "description": "An add-on for Create, providing enchanting & experience related automation.",
   "authors": [
     "MarbleGate",
-    "RaymondBlaze"
+    "RaymondBlaze",
+    "mpnordman",
+    "random_revilo"
+
   ],
   "contact": {
     "sources": "TODO"
