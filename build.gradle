@@ -1,0 +1,160 @@
+//file:noinspection GroovyAssignabilityCheck
+//file:noinspection GroovyAccessibility
+//file:noinspection GradlePackageVersionRange
+
+plugins {
+	id "fabric-loom" version "1.10-SNAPSHOT"
+	id "maven-publish"
+	id "me.modmuss50.mod-publish-plugin" version "0.3.5"
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+archivesBaseName = project.archives_base_name
+group = project.maven_group
+version = mod_version
+
+repositories {
+	maven { url = "https://maven.shedaniel.me/" }
+	maven { url = "https://maven.blamejared.com/" }
+	maven { url = "https://maven.parchmentmc.org" }
+	maven { url = "https://maven.quiltmc.org/repository/release" }
+	maven { url = "https://api.modrinth.com/maven" }
+	maven { url = "https://maven.terraformersmc.com/releases/" }
+	maven { url = "https://mvn.devos.one/snapshots/" }
+	maven { url = "https://mvn.devos.one/releases/" }
+	maven { url = "https://maven.createmod.net" }
+	maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" }
+	maven { url = "https://maven.jamieswhiteshirt.com/libs-release" }
+	maven { url = "https://jitpack.io/" }
+
+	flatDir {
+		dirs 'libs'
+	}
+
+	mavenLocal()
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/create_enchantment_industry.accesswidener")
+	sourceSets {
+		main {
+			resources {
+				srcDir("src/generated/resources")
+				exclude("src/generated/resources/.cache")
+			}
+		}
+	}
+
+	runs {
+		datagen {
+			client()
+			name "Data Generation"
+			vmArg "-Dfabric-api.datagen"
+			vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}"
+			vmArg "-Dfabric-api.datagen.modid=create_enchantment_industry"
+			vmArg "-Dporting_lib.datagen.existing_resources=${file("src/main/resources")}"
+		}
+		server {
+			runDir "run/server"
+		}
+	}
+}
+
+dependencies {
+	minecraft("com.mojang:minecraft:${minecraft_version}")
+	mappings(loom.layered {
+		it.officialMojangMappings { nameSyntheticMembers = false }
+		it.parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
+	})
+	modImplementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
+	modImplementation("com.simibubi.create:create-fabric:${create_version}")
+
+	// --- UPDATED LOCAL DRAGON LIB INTEGRATION ---
+	// Instead of files(), use coordinates. Loom will find this in your 'libs' folder.
+	// Ensure the filename is: create_dragon_lib-fabric-1.20.1-1.4.3.jar
+	modImplementation files("libs/create_dragon_lib-fabric-1.20.1-1.4.3.jar")
+	include files("libs/create_dragon_lib-fabric-1.20.1-1.4.3.jar")
+
+	modLocalRuntime("maven.modrinth:lazydfu:${lazydfu_version}")
+	modLocalRuntime("com.terraformersmc:modmenu:${modmenu_version}")
+
+	switch (recipe_viewer.toLowerCase(Locale.ROOT)) {
+		case "jei": modLocalRuntime("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}"); break
+		case "rei": modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}"); break
+		case "emi": modLocalRuntime("dev.emi:emi:${emi_version}"); break
+		case "disabled": break
+		default: println("Unknown recipe viewer specified: ${recipe_viewer}. Must be JEI, REI, EMI, or disabled.")
+	}
+
+	modCompileOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
+	modCompileOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+}
+
+processResources {
+	Map<String, String> properties = [
+			"version": version,
+			"fabric_loader_version": fabric_loader_version,
+			"fabric_api_version": fabric_api_version,
+			"create_version": create_version,
+			"minecraft_version": minecraft_version
+	]
+	properties.forEach((k, v) -> inputs.property(k, v))
+	filesMatching("fabric.mod.json") {
+		expand properties
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release.set(17)
+}
+
+java {
+	withSourcesJar()
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${archivesBaseName}" }
+	}
+}
+
+publishMods {
+	file = remapJar.archiveFile
+	changelog = new File("changelog/${mod_version}.md").exists() ? new File("changelog/${mod_version}.md").text : "Initial Release"
+	version = mod_version
+	type = STABLE
+	displayName = "CEI ${mod_version} for Create ${minecraft_version}-${create_version}"
+	modLoaders.add("fabric")
+	modLoaders.add("quilt")
+
+	curseforge {
+		projectId = "876129"
+		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+		minecraftVersions.add(minecraft_version)
+		requires {
+			slug = "create-fabric"
+			slug = "fabric-api"
+		}
+	}
+
+	modrinth {
+		projectId = "AEZO385x"
+		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+		minecraftVersions.add(minecraft_version)
+		requires {
+			slug = "create-fabric"
+			slug = "fabric-api"
+		}
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+}

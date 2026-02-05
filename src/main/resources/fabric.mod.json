@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "create_enchantment_industry",
+  "version": "${version}",
+  "name": "Create Enchantment Industry",
+  "description": "An add-on for Create, providing enchanting & experience related automation.",
+  "authors": [
+    "MarbleGate",
+    "RaymondBlaze"
+  ],
+  "contact": {
+    "sources": "TODO"
+  },
+  "license": "MIT",
+  "icon": "pack.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "plus.dragons.createenchantmentindustry.EnchantmentIndustry"
+    ],
+    "client": [
+      "plus.dragons.createenchantmentindustry.EnchantmentIndustryClient"
+    ],
+    "fabric-datagen": [
+      "plus.dragons.createenchantmentindustry.EnchantmentIndustryData"
+    ],
+    "jei_mod_plugin": [
+      "plus.dragons.createenchantmentindustry.compat.jei.CeiJEIPlugin"
+    ]
+  },
+  "mixins": [
+    "create_enchantment_industry.mixins.json"
+  ],
+  "accessWidener" : "create_enchantment_industry.accesswidener",
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_api_version}",
+    "create": "*",
+    "minecraft": "${minecraft_version}"
+  },
+  "recommends": {
+    "create": "${create_version}"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "B",
+    "A"
+  ],
+  "key": {
+    "A": {
+      "item": "create:copper_casing"
+    },
+    "B": {
+      "tag": "create:sandpaper"
+    }
+  },
+  "result": {
+    "item": "create_enchantment_industry:disenchanter"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "parent": "create_enchantment_industry:experienced_engineer",
+  "criteria": {
+    "builtin": {
+      "conditions": {},
+      "trigger": "create_enchantment_industry:builtin/experimental"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create_enchantment_industry.experimental.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:experience_bottle"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create_enchantment_industry.experimental"
+    }
+  },
+  "requirements": [
+    [
+      "builtin"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

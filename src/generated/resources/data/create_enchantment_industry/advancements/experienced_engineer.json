@@ -1,0 +1,39 @@
+{
+  "parent": "create:display_board_0",
+  "criteria": {
+    "have_experience_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:air"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create_enchantment_industry.experienced_engineer.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:air"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create_enchantment_industry.experienced_engineer"
+    }
+  },
+  "requirements": [
+    [
+      "have_experience_nugget"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

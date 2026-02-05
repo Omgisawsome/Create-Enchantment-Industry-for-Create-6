@@ -1,0 +1,29 @@
+{
+  "required": true,
+  "priority": 1100,
+  "package": "plus.dragons.createenchantmentindustry.foundation.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "AbstractFurnaceBlockEntityMixin",
+    "BasinBlockEntityMixin",
+    "CrushingWheelControllerBlockEntityMixin",
+    "DeployerFakePlayerMixin",
+    "FillingBySpoutMixin",
+    "FluidTankBlockMixin",
+    "ItemDrainBlockEntityAccessor",
+    "ItemDrainBlockMixin",
+    "OpenEndedPipeMixin",
+    "PlayerMixin",
+    "SpoutBlockEntityAccessor",
+    "SpoutBlockMixin",
+    "TankSegmentAccessor",
+    "fabric.RegistrateDisplayItemsGeneratorMixin"
+  ],
+  "client": [
+    "client.CameraMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
