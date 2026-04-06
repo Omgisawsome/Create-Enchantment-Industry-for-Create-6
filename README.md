@@ -1,6 +1,9 @@
 ## Welcome to **Create Enchantment Industry Fabric**
 A mod offering more tools and methods to handle experience & enchantment in Create.
 
+This mod has been updated from Create 5 to Create 6 for Fabric by mpnordland. The port was excellent, but it required their port of Create Dragon Lib, and you had to build it yourself from their source code. Additionally, the printer model was broken, so I fixed that.
+This mod WILL be updated so make sure to click on report issues. THIS IS JUST THE OLD CEI FEATURES MEANT FOR CREATE 6 ON FABRIC 1.20.1
+
 ![Fabric Logo](https://wsrv.nl/?url=https%3A%2F%2Fcdn.jsdelivr.net%2Fnpm%2F%40intergrav%2Fdevins-badges%403%2Fassets%2Fcozy%2Fsupported%2Ffabric_64h.png&n=-1 "Fabric Logo") ![Quilt Logo](https://wsrv.nl/?url=https%3A%2F%2Fcdn.jsdelivr.net%2Fnpm%2F%40intergrav%2Fdevins-badges%403%2Fassets%2Fcozy%2Fsupported%2Fquilt_64h.png&n=-1 "Quilt Logo")
 
 ![Forge Logo](https://wsrv.nl/?url=https%3A%2F%2Fcdn.jsdelivr.net%2Fnpm%2F%40intergrav%2Fdevins-badges%403%2Fassets%2Fcompact-minimal%2Fsupported%2Fforge_46h.png&n=-1 "Forge Logo") Looking for [Forge support](https://modrinth.com/mod/create-enchantment-industry)?
@@ -34,6 +37,7 @@ A mod offering more tools and methods to handle experience & enchantment in Crea
 - MEGATREX4 (Ukrainian localization)
 - EvanHsieh0415, cvrunmin (Traditional Chinese localization) Archerymaister (German localization) Luc_Creeper74 (French localization)
 - mpnordland (Port to Create 6)
+- random_revilo (Port to Create 6, maintainer)
 
 ## Contribute
 Feel free to open a PR to either translate the mod or to add another feature! All help is appreciated!
