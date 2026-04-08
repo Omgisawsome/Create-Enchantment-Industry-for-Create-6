@@ -21,7 +21,6 @@ import plus.dragons.createenchantmentindustry.entry.CeiFluids;
 @Mixin(targets = "com.simibubi.create.content.fluids.OpenEndedPipe$OpenEndFluidHandler", remap = false)
 public abstract class OpenEndedPipeMixin extends FluidTank {
 
-	// Grabs the outer OpenEndedPipe instance automatically without needing a custom Accessor
 	@Final
 	@Shadow(aliases = "this$0")
 	private OpenEndedPipe this$0;
@@ -40,7 +39,6 @@ public abstract class OpenEndedPipeMixin extends FluidTank {
 
 		if (maxAmount <= 0) return filled;
 
-		// Ensure we compare against the actual Fluid objects
 		boolean isExp = fluid.isSame(CeiFluids.EXPERIENCE.get()) ||
 				fluid.isSame(CeiFluids.HYPER_EXPERIENCE.get());
 
@@ -77,8 +75,7 @@ public abstract class OpenEndedPipeMixin extends FluidTank {
 				}
 			});
 
-			// THE BLACK HOLE FIX: We tell Create that the entire volume was successfully accepted.
-			// This prevents fluid from ever backing up into the pipe's internal buffer!
+
 			return maxAmount;
 		}
 
