@@ -1,7 +1,6 @@
 package plus.dragons.createenchantmentindustry.foundation.mixin;
 
 import com.simibubi.create.content.fluids.OpenEndedPipe;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
@@ -14,12 +13,15 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import plus.dragons.createenchantmentindustry.content.contraptions.fluids.experience.HyperExperienceFluid;
 import plus.dragons.createenchantmentindustry.content.contraptions.fluids.experience.HyperExperienceOrb;
 import plus.dragons.createenchantmentindustry.entry.CeiFluids;
 
 @Mixin(targets = "com.simibubi.create.content.fluids.OpenEndedPipe$OpenEndFluidHandler", remap = false)
-public abstract class OpenEndedPipeMixin extends FluidTank {
+public class OpenEndedPipeMixin {
 
 	@Final
 	@Shadow(aliases = "this$0")
@@ -28,16 +30,11 @@ public abstract class OpenEndedPipeMixin extends FluidTank {
 	@Unique
 	private long cei$dropletRemainder = 0;
 
-	public OpenEndedPipeMixin(long capacity) {
-		super(capacity);
-	}
+	@Inject(method = "insert", at = @At("HEAD"), cancellable = true, remap = false)
+	private void cei$interceptXPInsert(FluidVariant resource, long maxAmount, TransactionContext transaction, CallbackInfoReturnable<Long> cir) {
+		if (maxAmount <= 0) return;
 
-	@Override
-	public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-		long filled = super.insert(resource, maxAmount, transaction);
 		Fluid fluid = resource.getFluid();
-
-		if (maxAmount <= 0) return filled;
 
 		boolean isExp = fluid.isSame(CeiFluids.EXPERIENCE.get()) ||
 				fluid.isSame(CeiFluids.HYPER_EXPERIENCE.get());
@@ -57,14 +54,27 @@ public abstract class OpenEndedPipeMixin extends FluidTank {
 								this.cei$dropletRemainder = totalDroplets % 81;
 
 								if (xpAmount > 0) {
-									BlockPos pos = pipeInstance.getPos();
-									Vec3 spawnPos = Vec3.atCenterOf(pos).subtract(0, 0.5, 0);
+									BlockPos pipePos = pipeInstance.getPos();
+									BlockPos outputPos = pipeInstance.getOutputPos();
 
+									Vec3 spawnPos = Vec3.atCenterOf(outputPos);
+
+									Vec3 speed = new Vec3(
+											outputPos.getX() - pipePos.getX(),
+											outputPos.getY() - pipePos.getY(),
+											outputPos.getZ() - pipePos.getZ()
+									).scale(0.2);
+
+									ExperienceOrb orb;
 									if (fluid instanceof HyperExperienceFluid) {
-										serverLevel.addFreshEntity(new HyperExperienceOrb(serverLevel, spawnPos.x, spawnPos.y, spawnPos.z, xpAmount * 10));
+										orb = new HyperExperienceOrb(serverLevel, spawnPos.x, spawnPos.y - 0.25, spawnPos.z, xpAmount * 10);
 									} else {
-										serverLevel.addFreshEntity(new ExperienceOrb(serverLevel, spawnPos.x, spawnPos.y, spawnPos.z, xpAmount));
+										orb = new ExperienceOrb(serverLevel, spawnPos.x, spawnPos.y - 0.25, spawnPos.z, xpAmount);
 									}
+
+									// Apply the velocity push
+									orb.setDeltaMovement(speed);
+									serverLevel.addFreshEntity(orb);
 								}
 							}
 						}
@@ -75,10 +85,7 @@ public abstract class OpenEndedPipeMixin extends FluidTank {
 				}
 			});
 
-
-			return maxAmount;
+			cir.setReturnValue(maxAmount);
 		}
-
-		return filled;
 	}
 }
